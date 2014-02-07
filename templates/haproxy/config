@@ -1,0 +1,32 @@
+%(header)s
+
+listen admin
+    bind *:%(admin_port)s
+    stats enable
+    stats auth opsrobot:datame
+
+#---------------------------------------------------------------------
+# main frontend which proxys to the backends
+#---------------------------------------------------------------------
+frontend  main-http 
+     bind lb-1:80
+     bind lb-5:80
+#    acl url_static       path_beg       -i /static /images /javascript /stylesheets
+#    acl url_static       path_end       -i .jpg .gif .png .css .js
+   
+#    use_backend static          if url_static
+    default_backend             http-app
+
+%(app_http)s
+
+frontend  main-https *:443
+    default_backend             https-app
+
+%(app_https)s
+
+frontend  twistedmain %(twisted_load_balance_ip)s:80
+      mode tcp
+      default_backend             twisted
+
+%(twisted)s
+

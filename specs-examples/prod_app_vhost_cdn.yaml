@@ -1,0 +1,18 @@
+name: Prod Application Server CDN
+
+# Path to output templates.  The path can also contain fields in %(name)s format, to many dynamic output files
+path: tmp/prod_app_vhost_cdn.conf
+
+# Source template file.  This is what will be put into a single or multiple output files, depending on path
+template: templates/prod_app_vhost/app_httpd_cdn_item
+
+# If this exists, it wraps all the other templates data in starting and stopping template.  
+#   Requires %(template)s string to replace data.  Only useful for single path output files.
+template wrapper: templates/prod_app_vhost/app_httpd_cdn_wrapper
+
+# Data source spec is from in specs/datasources.yaml
+datasource: ops
+
+# SQL query or JSON/YAML key filter, depending on datasource type
+filter: "SELECT product.*, studio.path as path FROM product, studio WHERE product.is_product = 1 AND product.is_launched = 1 AND product.studio = studio.id AND product.studio = 1 ORDER BY name"
+

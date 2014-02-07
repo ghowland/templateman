@@ -1,0 +1,2 @@
+%(productname)sdb		CNAME	%(host)s
+%(productname)sreaddb		CNAME	%(host)s

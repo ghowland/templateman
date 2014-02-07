@@ -1,0 +1,4 @@
+static-cname		CNAME	static
+static			A	10.10.10.10
+
+%(template)s

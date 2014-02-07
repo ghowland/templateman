@@ -1,0 +1,40 @@
+#---------------------------------------------------------------------
+# Example configuration for a possible web application.  See the
+# full configuration options online.
+#
+#   http://haproxy.1wt.eu/download/1.3/doc/configuration.txt
+#
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
+# Global settings
+#---------------------------------------------------------------------
+global
+    log         /dev/log local2 info
+    log         /dev/log local2 notice
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     400000
+    user        haproxy
+    group       haproxy
+    daemon
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will 
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode http
+    log         global
+    option      dontlognull
+    option      httpclose
+#   option      httplog
+    option      forwardfor
+    option      redispatch
+# default time is in ms
+    timeout connect 5000 
+    timeout client 30000
+    timeout server 30000
+    maxconn     100000
+    retries     2

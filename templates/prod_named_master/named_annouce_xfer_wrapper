@@ -1,0 +1,3 @@
+    also-notify {
+%(template)s
+    }

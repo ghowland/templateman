@@ -1,0 +1,12 @@
+name: "Named Reverse Zone: Machines"
+
+# Source template file.  This is what will be put into a single or multiple output files, depending on path
+template: templates/prod_named_master/zone_reverse_machine
+
+# Data source spec is from in specs/datasources.yaml
+datasource: ops
+
+# SQL query or JSON/YAML key filter, depending on datasource type
+filter: "SELECT name, (INET_ATON(ip_private) & (255 << 24)) >> 24 AS octet1, (INET_ATON(ip_private) & (255 << 16)) >> 16 AS octet2, (INET_ATON(ip_private) & (255 << 8)) >> 8 AS octet3, INET_ATON(ip_private) & 255 AS octet4 FROM machine WHERE service NOT IN (22) AND location = 3 ORDER BY name"
+
+

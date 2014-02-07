@@ -1,0 +1,22 @@
+%(header)s
+
+;
+; Machines
+;
+
+%(machine)s
+
+;
+; Database groups
+;
+
+%(database_group_master)s
+%(database_group_slave)s
+
+;
+; Static Entries
+;
+
+%(static)s
+
+%(template)s

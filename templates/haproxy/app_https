@@ -1,0 +1,1 @@
+      server  %(name)s  %(ip_private)s:443 maxconn 130 check

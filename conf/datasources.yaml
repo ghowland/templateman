@@ -1,0 +1,7 @@
+ops:
+  type: mysql
+  database: ops
+  host: db.your.domain.com
+  user: ops
+  password: secretopspassword
+

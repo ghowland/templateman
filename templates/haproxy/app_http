@@ -1,0 +1,1 @@
+      server  %(name)s  %(ip_private)s:80 maxconn 130 check

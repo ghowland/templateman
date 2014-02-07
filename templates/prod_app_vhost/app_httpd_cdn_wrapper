@@ -1,0 +1,11 @@
+<VirtualHost *:80>
+ServerName cdn.your.domain.com
+DocumentRoot /var/www/html
+
+  #
+  # Directives to allow pointing to different product directory
+  #
+
+%(template)s
+
+</VirtualHost>

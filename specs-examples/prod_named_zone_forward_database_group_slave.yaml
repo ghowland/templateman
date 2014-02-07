@@ -1,0 +1,12 @@
+name: "Named Forward Zone: Database Group: Slave"
+
+# Source template file.  This is what will be put into a single or multiple output files, depending on path
+template: templates/prod_named_master/zone_forward_database_group_slave
+
+# Data source spec is from in specs/datasources.yaml
+datasource: ops
+
+# SQL query or JSON/YAML key filter, depending on datasource type
+filter: "SELECT alias AS productname, machine.name AS host FROM product, database_group AS dbg, machine WHERE dbg.location = 3 AND product.database_group = dbg.id AND machine.id = dbg.machine_slave ORDER BY product.alias"
+
+

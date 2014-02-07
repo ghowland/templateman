@@ -1,0 +1,14 @@
+name: Named Forward Zone
+
+# Path to output templates.  The path can also contain fields in %(name)s format, to many dynamic output files
+path: tmp/10.zone
+
+# Source template file.  This is what will be put into a single or multiple output files, depending on path
+template wrapper: templates/prod_named_master/zone_reverse
+
+# Template from these specs
+specs:
+  header: specs/prod_named_zone_reverse_header.yaml
+  machine: specs/prod_named_zone_reverse_machine.yaml
+  static: specs/prod_named_zone_reverse_static.yaml
+  

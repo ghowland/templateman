@@ -1,0 +1,15 @@
+%(header)s
+
+;
+; Machines
+;
+
+%(machine)s
+
+;
+; Static Entries
+;
+
+%(static)s
+
+%(template)s

@@ -1,0 +1,18 @@
+name: Application Server httpd.conf - Product
+
+# Path to output templates.  The path can also contain fields in %(name)s format, to many dynamic output files
+path: tmp/app_vhost_products.conf
+
+# Source template file.  This is what will be put into a single or multiple output files, depending on path
+template: templates/prod_app_vhost/app_httpd_vhost_products
+
+# If this exists, it wraps all the other templates data in starting and stopping template.  
+#   Requires %(template)s string to replace data.  Only useful for single path output files.
+template wrapper: null
+
+# Data source spec is from in specs/datasources.yaml
+datasource: ops
+
+# SQL query or JSON/YAML key filter, depending on datasource type
+filter: "SELECT * FROM product WHERE is_product = 1 AND is_launched = 1 AND studio IN (2) ORDER BY alias"
+

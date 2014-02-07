@@ -1,0 +1,15 @@
+# %(name)s
+<VirtualHost *:80>
+ServerName %(alias)s.your.domain.com
+
+DocumentRoot /var/www/%(alias)s/html
+
+<Directory "/var/www/%(alias)s/html/special">
+  AuthType Basic
+  AuthName "Restricted Files"
+  AuthUserFile /dev/null
+  Require user special
+</Directory>
+
+</VirtualHost>
+

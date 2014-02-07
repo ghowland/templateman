@@ -1,0 +1,14 @@
+name: HA Proxy
+
+# Path to output templates.  The path can also contain fields in %(name)s format, to many dynamic output files
+path: tmp/haproxy.cfg
+
+# Source template file.  This is what will be put into a single or multiple output files, depending on path
+template wrapper: templates/haproxy/config
+
+# Template from these specs
+specs:
+  header: specs/prod_named_zone_reverse_header.yaml
+  app_http: specs/prod_named_zone_reverse_machine.yaml
+  app_https: specs/prod_named_zone_reverse_static.yaml
+  twisted: specs/prod_named_zone_reverse_static.yaml

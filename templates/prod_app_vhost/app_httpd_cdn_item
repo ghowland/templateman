@@ -1,0 +1,1 @@
+  Alias /%(alias_short)s "/apps/%(alias)s/www/html"

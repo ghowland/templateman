@@ -1,0 +1,12 @@
+$ORIGIN .
+$TTL 1500	; 25 minutes
+prod.your.domain.com	IN SOA	dns-1.prod.your.domain.com. root.prod.your.domain.com. (
+				%(serial)s ; serial
+				9600       ; refresh (2 hours 40 minutes)
+				3600       ; retry (1 hour)
+				604800     ; expire (1 week)
+				86400      ; minimum (1 day)
+				)
+			NS	dns-1.prod.your.domain.com.
+$ORIGIN prod.your.domain.com.
+

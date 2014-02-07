@@ -1,0 +1,16 @@
+name: Named Forward Zone
+
+# Path to output templates.  The path can also contain fields in %(name)s format, to many dynamic output files
+path: tmp/prod.your.domain.zone
+
+# Source template file.  This is what will be put into a single or multiple output files, depending on path
+template wrapper: templates/prod_named_master/zone_forward
+
+# Template from these specs
+specs:
+  header: specs/prod_named_zone_forward_header.yaml
+  machine: specs/prod_named_zone_forward_machine.yaml
+  database_group_master: specs/prod_named_zone_forward_database_group_master.yaml
+  database_group_slave: specs/prod_named_zone_forward_database_group_slave.yaml
+  static: specs/prod_named_zone_forward_static.yaml
+  

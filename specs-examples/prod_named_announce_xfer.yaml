@@ -1,0 +1,18 @@
+name: Named Transfer Annoucement
+
+# Path to output templates.  The path can also contain fields in %(name)s format, to many dynamic output files
+path: tmp/announce-xfer.conf
+
+# Source template file.  This is what will be put into a single or multiple output files, depending on path
+template: templates/prod_named_master/named_annouce_xfer_item
+
+# If this exists, it wraps all the other templates data in starting and stopping template.  
+#   Requires %(template)s string to replace data.  Only useful for single path output files.
+template wrapper: templates/prod_named_master/named_annouce_xfer_wrapper
+
+# Data source spec is from in specs/datasources.yaml
+datasource: ops
+
+# SQL query or JSON/YAML key filter, depending on datasource type
+filter: "SELECT * FROM machine WHERE service in (1, 29, 7, 30) AND location = 3"
+

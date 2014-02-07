@@ -1,0 +1,11 @@
+name: "HA Proxy: App: HTTP"
+
+# Source template file.  This is what will be put into a single or multiple output files, depending on path
+template: templates/haproxy/app_http
+
+# Data source spec is from in specs/datasources.yaml
+datasource: ops
+
+# SQL query or JSON/YAML key filter, depending on datasource type
+filter: "SELECT * FROM machine WHERE service = 7 AND location = 3"
+

@@ -1,3 +1,10 @@
+#
+# Example Datasources - ./conf/datasources is the default path, so populating this for easy examples.
+#
+#   Replace these with your own sources.  Either SQL databases or YAML/JSON files of your own (typed or generated)
+#
+
+
 # MySQL ops database - Using databases provides more flexible templating with SQL
 ops:
   type: mysql
@@ -11,10 +18,15 @@ ops:
 #   While data files are less flexible than SQL, they can be be generated to be fully de-normalized which can provide just
 #   as good data sources as a SQL query.  These are hand-entered to show what a small text-file based manual data system would
 #   look like, which is easy to check into version control.
+#
+# YAML files are treated as Python lists of dicts, so records/rows of fields (key/value)
+#
 yaml_machines:
   type: yaml
   path: example-data/machines.yaml
   
+  # Relationships map record fields to other data source's record fields.  Assuming these are YAML/JSON as it doesnt map
+  #   to SQL Datasources properly.
   relationship:
     service: yaml_services.id
     environment: yaml_environments.id
@@ -35,6 +47,8 @@ yaml_users:
   type: yaml
   path: example-data/users.yaml
   
+  # Relationships map record fields to other data source's record fields.  Assuming these are YAML/JSON as it doesnt map
+  #   to SQL Datasources properly.
   relationship:
     groups: yaml_groups.id
 
@@ -44,10 +58,15 @@ yaml_groups:
 
 
 # JSON Data files - Examples of data being kept in JSON files, to test this functionality
+#
+# JSON files are treated as Python lists of dicts, so records/rows of fields (key/value)
+#
 json_machines:
   type: json
   path: example-data/machines.json
   
+  # Relationships map record fields to other data source's record fields.  Assuming these are YAML/JSON as it doesnt map
+  #   to SQL Datasources properly.
   relationship:
     service: json_services.id
     environment: json_environments.id
@@ -68,6 +87,8 @@ json_users:
   type: json
   path: example-data/users.json
   
+  # Relationships map record fields to other data source's record fields.  Assuming these are YAML/JSON as it doesnt map
+  #   to SQL Datasources properly.
   relationship:
     groups: json_groups.id
   

@@ -14,6 +14,10 @@ ops:
 yaml_machines:
   type: yaml
   path: example-data/machines.yaml
+  
+  relationship:
+    service: yaml_services.id
+    environment: yaml_environments.id
 
 yaml_services:
   type: yaml
@@ -30,6 +34,9 @@ yaml_products:
 yaml_users:
   type: yaml
   path: example-data/users.yaml
+  
+  relationship:
+    groups: yaml_groups.id
 
 yaml_groups:
   type: yaml
@@ -40,6 +47,10 @@ yaml_groups:
 json_machines:
   type: json
   path: example-data/machines.json
+  
+  relationship:
+    service: json_services.id
+    environment: json_environments.id
 
 json_services:
   type: json
@@ -56,7 +67,10 @@ json_products:
 json_users:
   type: json
   path: example-data/users.json
-
+  
+  relationship:
+    groups: json_groups.id
+  
 json_groups:
   type: json
   path: example-data/groups.json

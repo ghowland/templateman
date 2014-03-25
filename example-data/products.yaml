@@ -1,12 +1,15 @@
 - id: 1
   name: Widget
   info: Widget-as-a-Service Platform
+  is_launched: true
 
 - id: 2
   name: Gadget
   info: Gadget-as-a-Platform Service
+  is_launched: true
 
 - id: 3
   name: Gizmo
   info: Gizmo-as-a-Service-Platform
+  is_launched: false
 

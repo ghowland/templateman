@@ -4,18 +4,24 @@
   ip_internal: 10.0.1.11
   service: 1
   environment: 1
+  is_deployed: true
+  in_maintenance: false
 
 - id: 2
   name: app-002
   ip_internal: 10.0.1.12
   service: 1
   environment: 1
+  is_deployed: true
+  in_maintenance: false
 
 - id: 3
   name: app-003
   ip_internal: 10.0.1.13
   service: 1
   environment: 1
+  is_deployed: true
+  in_maintenance: true
 
 # Staging App
 - id: 4
@@ -23,18 +29,24 @@
   ip_internal: 10.10.1.11
   service: 1
   environment: 2
+  is_deployed: true
+  in_maintenance: false
 
 - id: 5
   name: staging-app-002
   ip_internal: 10.10.1.12
   service: 1
   environment: 2
+  is_deployed: true
+  in_maintenance: false
 
 - id: 6
   name: staging-app-003
   ip_internal: 10.10.1.13
   service: 1
   environment: 2
+  is_deployed: false
+  in_maintenance: false
 
 
 # Prod Database
@@ -42,57 +54,93 @@
   name: db-001
   service: 3
   environment: 1
+  is_deployed: true
+  in_maintenance: false
   
 - id: 8
   name: db-002
   service: 3
   environment: 1
+  is_deployed: true
+  in_maintenance: false
   
 # Staging Database
 - id: 9
   name: staging-db-001
   service: 3
   environment: 2
+  is_deployed: true
+  in_maintenance: false
   
 # Prod DNS
 - id: 10
   name: dns-001
   service: 2
   environment: 1
+  is_deployed: true
+  in_maintenance: false
   
 - id: 11
   name: dns-002
   service: 2
   environment: 1
+  is_deployed: true
+  in_maintenance: false
   
 # Corp DNS
 - id: 12
   name: corp-dns-001
   service: 2
   environment: 3
+  is_deployed: true
+  in_maintenance: false
   
 # Prod Backup
 - id: 13
   name: backup-001
   service: 5
   environment: 1
+  is_deployed: true
+  in_maintenance: false
   
 # DMZ
 - id: 14
   name: ftp-001
   service: 5
   environment: 4
+  is_deployed: true
+  in_maintenance: false
 
 # Prod Utility
 - id: 15
   name: ops-001
   service: 4
   environment: 1
+  is_deployed: true
+  in_maintenance: false
   
 - id: 16
   name: ops-002
   service: 4
   environment: 1
+  is_deployed: true
+  in_maintenance: false
+  
+
+# Prod Load Balancer
+- id: 16
+  name: load-001
+  service: 7
+  environment: 1
+  is_deployed: true
+  in_maintenance: false
+  
+- id: 17
+  name: load-002
+  service: 7
+  environment: 1
+  is_deployed: true
+  in_maintenance: false
   
 
 

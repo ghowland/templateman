@@ -2,19 +2,23 @@ production:
   id: 1
   name: production
   info: Production
+  group_ssh_acccess: [ops]
 
 staging:
   id: 2
   name: staging
   info: Staging
+  group_ssh_acccess: [eng, ops]
 
 corp:
   id: 3
   name: corp
   info: Corporate
+  group_ssh_acccess: [ops, eng, management]
 
 dmz:
   id: 4
   name: dmz
   info: DMZ - External Access
+  group_ssh_acccess: [ops]
 

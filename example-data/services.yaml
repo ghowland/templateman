@@ -1,0 +1,34 @@
+app:
+  id: 1
+  name: app
+  info: Application Server
+  port: 8080
+  
+dns:
+  id: 2
+  name: prod-dns
+  info: DNS
+
+database:
+  id: 3
+  name: database
+  info: Database Server
+  type: mysql
+
+utility:
+  id: 4
+  name: utility
+  info: Utility Server
+
+backup:
+  id: 5
+  name: backup
+  info: Backup Server
+
+sftp:
+  id: 6
+  name: sftp
+  info: Secure File Transfer
+
+
+  

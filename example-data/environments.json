@@ -1,0 +1,1 @@
+{"staging": {"info": "Staging", "id": 2, "name": "staging"}, "dmz": {"info": "DMZ - External Access", "id": 4, "name": "dmz"}, "production": {"info": "Production", "id": 1, "name": "production"}, "corp": {"info": "Corporate", "id": 3, "name": "corp"}}

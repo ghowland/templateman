@@ -1,7 +1,64 @@
+# MySQL ops database - Using databases provides more flexible templating with SQL
 ops:
   type: mysql
   database: ops
   host: db.your.domain.com
   user: ops
   password: secretopspassword
+
+
+# YAML Data files - Examples of data being kept in YAML files, to test this functionality
+#   While data files are less flexible than SQL, they can be be generated to be fully de-normalized which can provide just
+#   as good data sources as a SQL query.  These are hand-entered to show what a small text-file based manual data system would
+#   look like, which is easy to check into version control.
+yaml_machines:
+  type: yaml
+  path: example-data/machines.yaml
+
+yaml_services:
+  type: yaml
+  path: example-data/services.yaml
+
+yaml_environments:
+  type: yaml
+  path: example-data/environments.yaml
+
+yaml_products:
+  type: yaml
+  path: example-data/products.yaml
+
+yaml_users:
+  type: yaml
+  path: example-data/users.yaml
+
+yaml_groups:
+  type: yaml
+  path: example-data/groups.yaml
+
+
+# JSON Data files - Examples of data being kept in JSON files, to test this functionality
+json_machines:
+  type: json
+  path: example-data/machines.json
+
+json_services:
+  type: json
+  path: example-data/services.json
+
+json_environments:
+  type: json
+  path: example-data/environments.json
+
+json_products:
+  type: json
+  path: example-data/products.json
+
+json_users:
+  type: json
+  path: example-data/users.json
+
+json_groups:
+  type: json
+  path: example-data/groups.json
+
 

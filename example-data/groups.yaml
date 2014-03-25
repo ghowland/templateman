@@ -1,0 +1,20 @@
+- id: 1
+  name: ops
+  info: Operations
+
+- id: 2
+  name: eng
+  info: Engineering
+
+- id: 3
+  name: product
+  info: Product Management
+
+- id: 4
+  name: sales
+  info: Sales
+  
+- id: 5
+  name: management
+  info: Management
+  

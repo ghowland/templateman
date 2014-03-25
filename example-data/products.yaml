@@ -1,0 +1,12 @@
+- id: 1
+  name: Widget
+  info: Widget-as-a-Service Platform
+
+- id: 2
+  name: Gadget
+  info: Gadget-as-a-Platform Service
+
+- id: 3
+  name: Gizmo
+  info: Gizmo-as-a-Service-Platform
+

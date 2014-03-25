@@ -4,6 +4,12 @@ Template Manager
 
 Fetches data from database, JSON or YAML file, and inserts the field results 
 into one or more target template file.
+
+Can embed other text files into a template file, or process a new spec in-place using Commands like %%INCLUDE%%(path)%% or
+%%PROCESSS%%(spec_path)%%.
+
+TODO:
+  - Interactive command line option to create a spec (optionally save it) interactively.  Saves having to work out examples.
 """
 
 __author__ = 'Geoff Howland <geoff@gmail.com>'
@@ -17,17 +23,35 @@ import yaml
 from util import query
 
 
-def TemplateFromSpec(spec_path, datasources, options):
-  """Process the templating based on the spec path and options.
+def GetSpecData(spec_path, options):
+  """Load the spec data from the spec path.
 
-  Returns: string, output of templating operation
+  This function could exit the program, if there is a spec data failure.
   """
-  # Get the spec data, just to test path
-  spec_data = GetSpecData(spec_path, options)
+  # If the Spec File path does not exist
+  if not os.path.exists(spec_path):
+    Usage('Spec file "%s" does not exist' % spec_path)
 
-  print 'Templating: %s' % spec_data['name']
-  #print 'Sources: %s' % datasources
 
+  try:
+    spec_data = yaml.load(open(spec_path))
+    
+  except Exception, e:
+    Usage('Spec file is not a YAML file or has a formatting error: %s: %s' % (spec_data, e))
+
+
+  if type(spec_data) != dict:
+    Usage('Spec file is not formatted as a Dictionary at the top level, which is needs to be:\n\n  Spec Data: %s' % str(spec_data)[:100])
+
+  # If the Data Source path does not exist
+  if not os.path.exists(options['datasources']):
+    Usage('Spec file "%s" does not exist' % command_options['datasources'])
+
+  return spec_data
+
+
+def GetData(spec_data, data_sources, options):
+  """Handle data retrieval and filtering and stuff.  Returns usable data in list of dicts."""
   # Select the datasource for querying
   if spec_data.get('datasource', None):
     datasource = datasources[spec_data['datasource']]
@@ -40,6 +64,20 @@ def TemplateFromSpec(spec_path, datasources, options):
     data = query.Query(datasource, spec_data['filter'])
   else:
     data = []
+  
+  return data
+
+
+def TemplateFromSpec(spec_path, spec_data, datasources, options):
+  """Process the templating based on the spec path and options.
+
+  Returns: string, output of templating operation
+  """
+  print 'Templating: %s' % spec_data['name']
+  #print 'Sources: %s' % datasources
+
+  # Get our data, from specified source, with specified filter
+  data = GetData(spec_data, data_sources, options)
 
   # Create an empty output string to append to
   output = ''
@@ -49,6 +87,7 @@ def TemplateFromSpec(spec_path, datasources, options):
     template = open(spec_data['template']).read()
   else:
     template = ''
+
 
   # Template each item in data (rows)
   for item in data:
@@ -97,30 +136,6 @@ def TemplateFromSpec(spec_path, datasources, options):
   return output
 
 
-def GetSpecData(spec_path, options):
-  """Load the spec data from the spec path.
-
-  This function could exit the program, if there is a spec data failure.
-  """
-  # If the Spec File path does not exist
-  if not os.path.exists(spec_path):
-    Usage('Spec file "%s" does not exist' % spec_path)
-
-  try:
-    spec_data = yaml.load(open(spec_path))
-  except Exception, e:
-    Usage('Spec file is not a YAML file or has a formatting error: %s: %s' % (spec_data, e))
-
-  if type(spec_data) != dict:
-    Usage('Spec file is not formatted as a Dictionary at the top level, which is needs to be:\n\n  Spec Data: %s' % str(spec_data)[:100])
-
-  # If the Data Source path does not exist
-  if not os.path.exists(options['datasources']):
-    Usage('Spec file "%s" does not exist' % command_options['datasources'])
-
-  return spec_data
-
-
 def ProcessSpecPath(spec_path, command_options):
   """Process a single specification path.  
 
@@ -140,12 +155,24 @@ def ProcessSpecPath(spec_path, command_options):
     return
 
   # Template All The Things: Master loop for Template Manager
-  output = TemplateFromSpec(spec_path, datasources, command_options)
+  output = TemplateFromSpec(spec_path, spec_data, datasources, command_options)
 
   # Save the master path
   open(spec_data['path'], 'w').write(output)
 
   print 'Output Successful: %s' % spec_data['path']
+
+
+def ProcessSpecPath(spec_path, command_options):
+  """Process a single specification path.  
+
+  This could exit the program by calling Usage() in case of path errors.
+  """
+  # Get the spec data, just to test path
+  spec_data = GetSpecData(spec_path, command_options)
+  
+  # Pass through to ProcessSpec(), which can be called directly with data as API
+  return ProcessSpec(spec_path, spec_data, command_options)
 
 
 def Usage(error=None):

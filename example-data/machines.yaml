@@ -1,0 +1,98 @@
+# Prod App
+- id: 1
+  name: app-001
+  ip_internal: 10.0.1.11
+  service: 1
+  environment: 1
+
+- id: 2
+  name: app-002
+  ip_internal: 10.0.1.12
+  service: 1
+  environment: 1
+
+- id: 3
+  name: app-003
+  ip_internal: 10.0.1.13
+  service: 1
+  environment: 1
+
+# Staging App
+- id: 4
+  name: staging-app-001
+  ip_internal: 10.10.1.11
+  service: 1
+  environment: 2
+
+- id: 5
+  name: staging-app-002
+  ip_internal: 10.10.1.12
+  service: 1
+  environment: 2
+
+- id: 6
+  name: staging-app-003
+  ip_internal: 10.10.1.13
+  service: 1
+  environment: 2
+
+
+# Prod Database
+- id: 7
+  name: db-001
+  service: 3
+  environment: 1
+  
+- id: 8
+  name: db-002
+  service: 3
+  environment: 1
+  
+# Staging Database
+- id: 9
+  name: staging-db-001
+  service: 3
+  environment: 2
+  
+# Prod DNS
+- id: 10
+  name: dns-001
+  service: 2
+  environment: 1
+  
+- id: 11
+  name: dns-002
+  service: 2
+  environment: 1
+  
+# Corp DNS
+- id: 12
+  name: corp-dns-001
+  service: 2
+  environment: 3
+  
+# Prod Backup
+- id: 13
+  name: backup-001
+  service: 5
+  environment: 1
+  
+# DMZ
+- id: 14
+  name: ftp-001
+  service: 5
+  environment: 4
+
+# Prod Utility
+- id: 15
+  name: ops-001
+  service: 4
+  environment: 1
+  
+- id: 16
+  name: ops-002
+  service: 4
+  environment: 1
+  
+
+

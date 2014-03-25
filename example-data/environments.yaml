@@ -1,0 +1,20 @@
+production:
+  id: 1
+  name: production
+  info: Production
+
+staging:
+  id: 2
+  name: staging
+  info: Staging
+
+corp:
+  id: 3
+  name: corp
+  info: Corporate
+
+dmz:
+  id: 4
+  name: dmz
+  info: DMZ - External Access
+

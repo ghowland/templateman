@@ -8,7 +8,7 @@ template wrapper: templates/haproxy/config
 
 # Template from these specs
 specs:
-  header: specs/haproxy_header.yaml
-  app_http: specs/haproxy_app_http.yaml
-  app_https: specs/haproxy_app_https.yaml
-  twisted: specs/haproxy_app_twisted.yaml
+  header: specs/haproxy/haproxy_header.yaml
+  app_http: specs/haproxy/haproxy_app_http.yaml
+  app_https: specs/haproxy/haproxy_app_https.yaml
+  twisted: specs/haproxy/haproxy_app_twisted.yaml

@@ -8,9 +8,9 @@ template wrapper: templates/prod_named_master/zone_forward
 
 # Template from these specs
 specs:
-  header: specs/prod_named_zone_forward_header.yaml
-  machine: specs/prod_named_zone_forward_machine.yaml
-  database_group_master: specs/prod_named_zone_forward_database_group_master.yaml
-  database_group_slave: specs/prod_named_zone_forward_database_group_slave.yaml
-  static: specs/prod_named_zone_forward_static.yaml
+  header: specs/named/prod_named_zone_forward_header.yaml
+  machine: specs/named/prod_named_zone_forward_machine.yaml
+  database_group_master: specs/named/prod_named_zone_forward_database_group_master.yaml
+  database_group_slave: specs/named/prod_named_zone_forward_database_group_slave.yaml
+  static: specs/named/prod_named_zone_forward_static.yaml
   

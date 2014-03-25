@@ -1,0 +1,20 @@
+# Include a text file into the current template, at this location.  Single include, only command processing is performed.
+include:
+  prefix: "%%INCLUDE%%("
+  postfix: ")%%"
+
+# Do nothing with the specified value.  This allows includes to be turned off, while essentially leaving them in-place as
+#   documentation.  A more advanced use of this is to toggle 2 or more includes, so all are comments except the active one.
+#   This allows for "hard-coding" template changes, while still making all the other possible options visible in the same
+#   place in the template file.
+comment:
+  prefix: "%%COMMENT%%("
+  postfix: ")%%"
+
+
+# Process value as a Spec file.  This allows for embedding complexity and provides another option for templating.
+#       These will be YAML or JSON spec configuration files, compared to include which imports text.
+process:
+  prefix: "%%PROCESS%%("
+  postfix: ")%%"
+

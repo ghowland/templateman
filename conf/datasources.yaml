@@ -50,6 +50,7 @@ yaml_users:
   # Relationships map record fields to other data source's record fields.  Assuming these are YAML/JSON as it doesnt map
   #   to SQL Datasources properly.
   relationship:
+    # Groups is a list of strings, which will assume it is a collection of group names.
     groups: yaml_groups.id
 
 yaml_groups:
@@ -90,7 +91,8 @@ json_users:
   # Relationships map record fields to other data source's record fields.  Assuming these are YAML/JSON as it doesnt map
   #   to SQL Datasources properly.
   relationship:
-    groups: json_groups.id
+    # Groups is a list of strings, which will assume it is a collection of group names.
+    groups: json_groups.name
   
 json_groups:
   type: json

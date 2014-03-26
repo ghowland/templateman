@@ -8,6 +8,6 @@ template: example-templates/haproxy/config
 
 # Template from these specs
 specs:
-  header: example-specs/haproxy/haproxy_header.yaml
-  app_http: example-specs/haproxy/haproxy_app_http.yaml
-  app_https: example-specs/haproxy/haproxy_app_https.yaml
+  header: example-specs/haproxy-sql/haproxy_header.yaml
+  app_http: example-specs/haproxy-sql/haproxy_app_http.yaml
+  app_https: example-specs/haproxy-sql/haproxy_app_https.yaml

@@ -6,10 +6,10 @@ Fetches data from database, JSON or YAML file, and inserts the field results
 into one or more target template file.
 
 Can embed other text files into a template file, or process a new spec in-place using Commands like %%INCLUDE%%(path)%% or
-%%PROCESSS%%(spec_path)%%.
+%%PROCESSS%%(spec_path)%% (specified in ./conf/commands.yaml).
 
 TODO:
-  - Interactive command line option to create a spec (optionally save it) interactively.  Saves having to work out examples.
+  - Interactive command line option to create a spec (optionally save it) interactively.  Saves having to work out of examples.
 """
 
 
@@ -108,8 +108,7 @@ def TemplateFromCommands(template, options, depth=0, path=None):
     
     commands_found[command] = regex_result
 
-  print commands_found
-  
+
   # Include other files
   if 'include' in commands_found:
     for path in commands_found['include']:
@@ -234,13 +233,6 @@ def ProcessSpec(spec_path, spec_data, options):
     datasources = yaml.load(open(options['datasources']))
   except Exception, e:
     Usage('Data Sources is not a YAML file or has a formatting error: %s: %s' % (datasources, e))
-
-  #TODO(g): REMOVE?  Better to default to STDOUT, or complain?  M
-  #
-  ## If there is no path, then dont process this from the CLI invocation
-  #if spec_data.get('path', None) == None:
-  #  log('Skipping, no path target: %s' % spec_path)
-  #  return
 
   # Template All The Things: Master loop for Template Manager
   output = TemplateFromSpec(spec_path, spec_data, datasources, options)

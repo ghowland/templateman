@@ -1,14 +1,13 @@
 name: HA Proxy
 
 # Path to output templates.  The path can also contain fields in %(name)s format, to many dynamic output files
-path: tmp/haproxy.cfg
+path: example-tmp/haproxy.cfg
 
 # Source template file.  This is what will be put into a single or multiple output files, depending on path
-template wrapper: templates/haproxy/config
+template: example-templates/haproxy/config
 
 # Template from these specs
 specs:
-  header: specs/haproxy/haproxy_header.yaml
-  app_http: specs/haproxy/haproxy_app_http.yaml
-  app_https: specs/haproxy/haproxy_app_https.yaml
-  twisted: specs/haproxy/haproxy_app_twisted.yaml
+  header: example-specs/haproxy/haproxy_header.yaml
+  app_http: example-specs/haproxy/haproxy_app_http.yaml
+  app_https: example-specs/haproxy/haproxy_app_https.yaml

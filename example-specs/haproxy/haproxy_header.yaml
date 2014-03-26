@@ -1,11 +1,5 @@
-name: "SV4 Named Reverse Zone: Header"
+name: "HA Proxy: Header"
 
 # Source template file.  This is what will be put into a single or multiple output files, depending on path
-template: templates/prod_named_master/zone_reverse_header
-
-# Data source spec is from in specs/datasources.yaml
-datasource: ops
-
-# SQL query or JSON/YAML key filter, depending on datasource type
-filter: "SELECT unix_timestamp(now()) + 2147483647 as serial"
+template: example-templates/haproxy/header
 

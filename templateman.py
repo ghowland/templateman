@@ -20,10 +20,12 @@ import sys
 import os
 import getopt
 import yaml
+import re
 
 import util
 from util.log import log
 from util import query
+from util.regex import SanitizeRegex
 
 
 class ConfigurationError(Exception):
@@ -93,6 +95,59 @@ def TemplateFromSpecPath(spec_path, datasources, options):
   return TemplateFromSpec(spec_path, spec_data, datasources, options)
   
 
+def TemplateFromCommands(template, options, depth=0, path=None):
+  if depth > 50:
+    log('WARNING: Maximum depth execeeded (%s) in TemplateFromCommands: %s' % (depth, path))
+    return template
+  
+  # Find Template commands in our template
+  commands_found = {}
+  for (command, command_data) in options['commands'].items():
+    regex = '%s(.*?)%s' % (SanitizeRegex(command_data['prefix']), SanitizeRegex(command_data['postfix']))
+    regex_result = re.findall(regex, template)
+    
+    commands_found[command] = regex_result
+
+  print commands_found
+  
+  # Include other files
+  if 'include' in commands_found:
+    for path in commands_found['include']:
+      # If this is a valid file, load it and include it (with it's own TemplateFromCommands processing)
+      if os.path.isfile(path):
+        # Load the template
+        include_template = open(path).read()
+        
+        # Process any commands embedded in this template
+        include_template = TemplateFromCommands(include_template, options, depth=depth+1, path=path)
+        
+        # Build the replacement string
+        insert_replace = '%s%s%s' % (options['commands']['include']['prefix'], path, options['commands']['include']['postfix'])
+        
+        # Insert into our current template
+        template = template.replace(insert_replace, include_template)
+        
+      else:
+        log('WARNING: INCLUDE path not found: %s' % path)
+  
+  
+  # Comments -- Wipe them out, they are made to disappear
+  if 'comment' in commands_found:
+    for path in commands_found['comment']:
+      # Build the replacement string
+      insert_replace = '%s%s%s' % (options['commands']['comment']['prefix'], path, options['commands']['comment']['postfix'])
+      
+      # Empty out the Comment statement
+      template = template.replace(insert_replace, '')
+
+  
+  # Process TemplateMan spec in-place
+  if 'process' in commands_found and commands_found['process']:
+    log('ERROR: Processing commands found, but this is not yet implemented...')
+
+  return template
+
+
 def TemplateFromSpec(spec_path, spec_data, datasources, options):
   """Process the templating based on the spec path and options.
 
@@ -111,8 +166,13 @@ def TemplateFromSpec(spec_path, spec_data, datasources, options):
   if spec_data.get('template', None):
     template = open(spec_data['template']).read()
   else:
-    log('WARN: Using empty template text')
+    log('WARNING: Using empty template text')
     template = ''
+
+
+  # Process any template commands that are embedded in this template, to construct a larger/deeper template, before
+  #   the spec keys are processed (below)
+  template = TemplateFromCommands(template, options)
 
 
   # If we dont have any data source, the template is our output to start working
@@ -132,10 +192,9 @@ def TemplateFromSpec(spec_path, spec_data, datasources, options):
       
       # Output the item...
       output += item_output
+
   
   
-
-
   # If we have a template wrapper
   #NOTE(ghowland): This stage must be second-to-last, as it wraps the generated template results in a pre-formatted template
   if spec_data.get('template wrapper', None):
@@ -252,7 +311,8 @@ def Main(args=None):
   command_options = {}
   command_options['verbose'] = False
   command_options['stdout'] = False
-  command_options['datasources'] = 'conf/datasources.yaml'
+  command_options['datasources'] = None
+  command_options['commands_path'] = None
   
   
   # Process out CLI options
@@ -269,9 +329,31 @@ def Main(args=None):
     elif option in ('-S', '--stdout'):
       command_options['stdout'] = True
     
-    # Verbose output information
+    # Data sources path option
     elif option in ('-s', '--datasources'):
+      if not os.path.isfile(value):
+        Usage('Datasource file specified not found: %s' % value)
+        
       command_options['datasources'] = value
+    
+    # Commands path option
+    elif option in ('-c', '--commands'):
+      if not os.path.isfile(value):
+        Usage('Command file specified not found: %s' % value)
+        
+      command_options['commands_path'] = value
+
+
+  # Datasource: Populate default file paths, if not specified
+  if command_options['datasources'] == None:
+    command_options['datasources'] = '%s/conf/datasources.yaml' % os.path.dirname(sys.argv[0])
+    
+  # Commands: Populate default file path, if not specified
+  if command_options['commands_path'] == None:
+    command_options['commands_path'] = '%s/conf/commands.yaml' % os.path.dirname(sys.argv[0])
+    
+  # Load the commands 
+  command_options['commands'] = yaml.load(open(command_options['commands_path']))
 
 
   # Ensure we at least have a command, it's required

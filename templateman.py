@@ -194,7 +194,6 @@ def TemplateFromSpec(spec_path, spec_data, datasources, options):
       output += item_output
 
   
-  
   # If we have a template wrapper
   #NOTE(ghowland): This stage must be second-to-last, as it wraps the generated template results in a pre-formatted template
   if spec_data.get('template wrapper', None):

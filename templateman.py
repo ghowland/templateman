@@ -43,22 +43,22 @@ def GetSpecData(spec_path, options):
   """
   # If the Spec File path does not exist
   if not os.path.exists(spec_path):
-    Usage('Spec file "%s" does not exist' % spec_path)
+    Usage('Spec file "%s" does not exist' % spec_path, options=options)
 
 
   try:
     spec_data = yaml.load(open(spec_path))
     
   except Exception, e:
-    Usage('Spec file is not a YAML file or has a formatting error: %s: %s' % (spec_data, e))
+    Usage('Spec file is not a YAML file or has a formatting error: %s: %s' % (spec_path, e), options=options)
 
 
   if type(spec_data) != dict:
-    Usage('Spec file is not formatted as a Dictionary at the top level, which is needs to be:\n\n  Spec Data: %s' % str(spec_data)[:100])
+    Usage('Spec file is not formatted as a Dictionary at the top level, which is needs to be:\n\n  Spec Data: %s' % str(spec_data)[:100], options=options)
 
   # If the Data Source path does not exist
   if not os.path.exists(options['datasources']):
-    Usage('Spec file "%s" does not exist' % options['datasources'])
+    Usage('Spec file "%s" does not exist' % options['datasources'], options=options)
 
 
   return spec_data
@@ -205,6 +205,18 @@ def TemplateFromSpec(spec_path, spec_data, datasources, options):
     output = template_wrapper.replace('%(template)s', output)
 
 
+  # If we have data to template into this spec template (Static text variables)
+  #NOTE(ghowland): This must be SECOND TO LAST in process order, because it 
+  #   the specs must come after this.
+  if spec_data.get('data', None):
+    # Process each of the static data replacements
+    for (data_key, data_value) in spec_data['data'].items():
+      # Template the results into our template output
+      key_str = '%%(%s)s' % data_key
+      if key_str in output:
+        output = output.replace(key_str, str(data_value))
+
+
   # If we have specs to template into this spec template (Recursion!)
   #NOTE(ghowland): This must be LAST in process order, because it 
   #   operates on the finished output, and requires template wrapping
@@ -232,16 +244,18 @@ def ProcessSpec(spec_path, spec_data, options):
   try:
     datasources = yaml.load(open(options['datasources']))
   except Exception, e:
-    Usage('Data Sources is not a YAML file or has a formatting error: %s: %s' % (datasources, e))
+    Usage('Data Sources is not a YAML file or has a formatting error: %s: %s' % (datasources, e), options=options)
 
   # Template All The Things: Master loop for Template Manager
   output = TemplateFromSpec(spec_path, spec_data, datasources, options)
 
   # Save the master path
   if (spec_data.get('path', None)):
-    open(spec_data['path'], 'w').write(output)
-    
-    log('Output Successful: %s' % spec_data['path'])
+    # If we havent been told to write an output file, write it
+    if not options['no_output_file']:
+      open(spec_data['path'], 'w').write(output)
+      
+      log('Output Successful: %s' % spec_data['path'])
   
   # Else
   else:
@@ -249,6 +263,8 @@ def ProcessSpec(spec_path, spec_data, options):
       print output
     else:
       log('ERROR: No path for final output, and option --stdout was not used.')
+  
+  return output
 
 
 def ProcessSpecPath(spec_path, options):
@@ -260,13 +276,20 @@ def ProcessSpecPath(spec_path, options):
   spec_data = GetSpecData(spec_path, options)
   
   # Pass through to ProcessSpec(), which can be called directly with data as API
-  ProcessSpec(spec_path, spec_data, options)
+  output = ProcessSpec(spec_path, spec_data, options)
+  
+  return output
 
 
-def Usage(error=None):
+def Usage(error=None, options=None):
   """Print usage information, any errors, and exit.  
   If errors, exit code = 1, otherwise 0.
   """
+  
+  # If this was invokved via an API (Python module call), then raise an exception instead of doing sys.exit()
+  if options and options.get('api', False):
+    raise Exception(error)
+  
   if error:
     print '\nerror: %s' % error
     exit_code = 1
@@ -282,39 +305,46 @@ def Usage(error=None):
   print '  -v, --verbose              Verbose output'
   print '  -S, --stdout               Print any output without a path to STDOUT'
   print '  -s, --datasources=[path]   Datasources YAML spec'
+  print '  -n, --no-output-file       Do not write to an output file (API access)'
   print
   
   sys.exit(exit_code)
 
 
-def Main(args=None):
-  if not args:
-    args = []
+def ProcessOptions(options, api=False):
+  """Returns a dict of options, based on any command line or API specified.
   
-  long_options = ['help', 'verbose', 'stdout', 'datasources=']
+  Args:
+    command_line_options: tuple (key, value), options output from getopt.getopt()
+    api: boolean, if calling this from an API, set this to True so we dont do sys.exit() on errors
   
-  try:
-    (options, args) = getopt.getopt(args, '?hvSd:', long_options)
-  except getopt.GetoptError, e:
-    Usage(e)
-  
+  Returns: dict
+  """
   # Dictionary of command options, with defaults
   command_options = {}
   command_options['verbose'] = False
   command_options['stdout'] = False
+  command_options['no_output_file'] = False
   command_options['datasources'] = None
   command_options['commands_path'] = None
+  
+  # Used for preventing sys.exit() on errors, exceptions are thrown instead
+  command_options['api'] = api
   
   
   # Process out CLI options
   for (option, value) in options:
     # Help
     if option in ('-h', '-?', '--help'):
-      Usage()
+      Usage(options=options)
     
     # Verbose output information
     elif option in ('-v', '--verbose'):
       command_options['verbose'] = True
+    
+    # Verbose output information
+    elif option in ('-n', '--no-output-file'):
+      command_options['no_output_file'] = True
     
     # Print output without path to STDOUT
     elif option in ('-S', '--stdout'):
@@ -323,14 +353,14 @@ def Main(args=None):
     # Data sources path option
     elif option in ('-s', '--datasources'):
       if not os.path.isfile(value):
-        Usage('Datasource file specified not found: %s' % value)
+        Usage('Datasource file specified not found: %s' % value, options=options)
         
       command_options['datasources'] = value
     
     # Commands path option
     elif option in ('-c', '--commands'):
       if not os.path.isfile(value):
-        Usage('Command file specified not found: %s' % value)
+        Usage('Command file specified not found: %s' % value, options=options)
         
       command_options['commands_path'] = value
 
@@ -345,11 +375,29 @@ def Main(args=None):
     
   # Load the commands 
   command_options['commands'] = yaml.load(open(command_options['commands_path']))
+  
+  return command_options
 
+
+def Main(args=None):
+  if not args:
+    args = []
+  
+  long_options = ['help', 'verbose', 'stdout', 'datasources=']
+  
+  try:
+    (options, args) = getopt.getopt(args, '?hvSd:', long_options)
+  except getopt.GetoptError, e:
+    Usage(e, options=options)
+  
+  
+  # Process the options and return 
+  command_options = ProcessOptions(options)
+  
 
   # Ensure we at least have a command, it's required
   if len(args) < 1:
-    Usage('No Spec file specified.  Spec file should be a YAML formatted ')
+    Usage('No Spec file specified.  Spec file should be a YAML formatted ', options=options)
   
 
   # Process each of the arguments as a separate spec file

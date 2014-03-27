@@ -152,7 +152,7 @@ def TemplateFromSpec(spec_path, spec_data, datasources, options):
 
   Returns: string, output of templating operation
   """
-  log('Templating: %s' % spec_data['name'])
+  log('Templating: %s: %s' % (spec_data['name'], spec_path))
   #log('Sources: %s' % datasources)
 
   # Get our data, from specified source, with specified filter

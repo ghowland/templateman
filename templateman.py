@@ -205,6 +205,16 @@ def TemplateFromSpec(spec_path, spec_data, datasources, options):
     output = template_wrapper.replace('%(template)s', output)
 
 
+  # If we are being passed optional data
+  if 'data' in options:
+    # Update our current data with it, if existing
+    if 'data' in spec_data:
+      spec_data['data'].update(options['data'])
+    # Make a new dict for it, if not existing
+    else:
+      spec_data['data'] = dict(options['data'])
+
+
   # If we have data to template into this spec template (Static text variables)
   #NOTE(ghowland): This must be SECOND TO LAST in process order, because it 
   #   the specs must come after this.

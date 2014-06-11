@@ -8,6 +8,8 @@ into one or more target template file.
 Can embed other text files into a template file, or process a new spec in-place using Commands like %%INCLUDE%%(path)%% or
 %%PROCESSS%%(spec_path)%% (specified in ./conf/commands.yaml).
 
+Copyright Geoff Howland, 2014.  MIT License.
+
 TODO:
   - Interactive command line option to create a spec (optionally save it) interactively.  Saves having to work out of examples.
 """

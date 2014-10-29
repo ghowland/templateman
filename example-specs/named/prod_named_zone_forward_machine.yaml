@@ -1,7 +1,7 @@
 name: "Named Forward Zone: Machines"
 
 # Source template file.  This is what will be put into a single or multiple output files, depending on path
-template: templates/prod_named_master/zone_forward_machine
+template: example-templates/prod_named_master/zone_forward_machine
 
 # Data source spec is from in specs/datasources.yaml
 datasource: ops

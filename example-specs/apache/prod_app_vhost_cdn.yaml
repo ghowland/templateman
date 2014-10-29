@@ -4,11 +4,11 @@ name: Prod Application Server CDN
 path: tmp/prod_app_vhost_cdn.conf
 
 # Source template file.  This is what will be put into a single or multiple output files, depending on path
-template: templates/prod_app_vhost/app_httpd_cdn_item
+template: example-templates/prod_app_vhost/app_httpd_cdn_item
 
 # If this exists, it wraps all the other templates data in starting and stopping template.  
 #   Requires %(template)s string to replace data.  Only useful for single path output files.
-template wrapper: templates/prod_app_vhost/app_httpd_cdn_wrapper
+template wrapper: example-templates/prod_app_vhost/app_httpd_cdn_wrapper
 
 # Data source spec is from in specs/datasources.yaml
 datasource: ops

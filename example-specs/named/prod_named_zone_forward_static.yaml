@@ -1,5 +1,5 @@
 name: "Named Forward Zone: Static"
 
 # Source template file.  This is what will be put into a single or multiple output files, depending on path
-template wrapper: templates/prod_named_master/zone_forward_static
+template wrapper: example-templates/prod_named_master/zone_forward_static
 

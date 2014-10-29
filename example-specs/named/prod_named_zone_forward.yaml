@@ -4,13 +4,13 @@ name: Named Forward Zone
 path: tmp/prod.your.domain.zone
 
 # Source template file.  This is what will be put into a single or multiple output files, depending on path
-template wrapper: templates/prod_named_master/zone_forward
+template wrapper: example-templates/prod_named_master/zone_forward
 
 # Template from these specs
 specs:
-  header: specs/named/prod_named_zone_forward_header.yaml
-  machine: specs/named/prod_named_zone_forward_machine.yaml
-  database_group_master: specs/named/prod_named_zone_forward_database_group_master.yaml
-  database_group_slave: specs/named/prod_named_zone_forward_database_group_slave.yaml
-  static: specs/named/prod_named_zone_forward_static.yaml
+  header: example-specs/named/prod_named_zone_forward_header.yaml
+  machine: example-specs/named/prod_named_zone_forward_machine.yaml
+  database_group_master: example-specs/named/prod_named_zone_forward_database_group_master.yaml
+  database_group_slave: example-specs/named/prod_named_zone_forward_database_group_slave.yaml
+  static: example-specs/named/prod_named_zone_forward_static.yaml
   

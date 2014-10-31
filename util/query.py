@@ -14,15 +14,15 @@ class UnknownDatasourceType(Exception):
   """When we dont have a handler for this type of data source."""
 
 
-def Query(datasource, spec_data):
+def Query(datasource, spec_data, query_key='filter'):
   # MySQL database
   if datasource['type'] == 'mysql':
     # Dynamic import means that we dont need installed modules if this type isnt being used
     import mysql_datasource
     
-    filter = spec_data['filter']
+    sql = spec_data[query_key]
     
-    result = mysql_datasource.Query(datasource, filter)
+    result = mysql_datasource.Query(datasource, sql)
 
   # YAML data file
   elif datasource['type'] == 'yaml':

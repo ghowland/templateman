@@ -73,8 +73,8 @@ def MysqlQuery(sql, host, user, password, database, port=3306):
       success = True
     
     except MYSQL_EXCEPTION, e:
-      print(e)
-      print(dir(e))
+      #print(e)
+      #print(dir(e))
       
       try:
         # MySQLdb

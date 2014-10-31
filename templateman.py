@@ -154,7 +154,7 @@ def TemplateFromSpec(spec_path, spec_data, datasources, options):
 
   Returns: string, output of templating operation
   """
-  log('Templating: %s: %s' % (spec_data['name'], spec_path))
+  log('Templating: %s: %s' % (spec_data.get('name', '** "name" value not specified in spec **'), spec_path))
   #log('Sources: %s' % datasources)
 
   # Get our data, from specified source, with specified filter
@@ -257,26 +257,62 @@ def ProcessSpec(spec_path, spec_data, options):
     datasources = yaml.load(open(options['datasources']))
   except Exception, e:
     Usage('Data Sources is not a YAML file or has a formatting error: %s: %s' % (datasources, e), options=options)
-
-  # Template All The Things: Master loop for Template Manager
-  output = TemplateFromSpec(spec_path, spec_data, datasources, options)
-
-  # Save the master path
-  if (spec_data.get('path', None)):
-    # If we havent been told to write an output file, write it
-    if not options['no_output_file']:
-      open(spec_data['path'], 'w').write(output)
+  
+  # If we are using path filters, we will process many spec paths and data
+  if 'path filter' in spec_data:
+    spec_data_list = []
+    
+    # If we found python string formatting in the spec_path, we know this will work
+    if '%(' in spec_data['path'] and ')s' in spec_data['path']:
+      # Get the data needed for each of the paths to be filtered themselves
+      path_data = query.Query(datasources[spec_data['datasource']], spec_data, 'path filter')
+      if not path_data:
+        raise Exception('"path filter" filter did not produce any results: %s' % spec_data['path filter'])
       
-      log('Output Successful: %s' % spec_data['path'])
-  
-  # Else
-  else:
-    if options['stdout']:
-      print output
+      # Process the path data: we will be formatting both the path and the filter
+      for path_data_item in path_data:
+        spec_data_cur = dict(spec_data)
+        
+        # Template the filter and path vars
+        spec_data_cur['filter'] = spec_data_cur['filter'] % path_data_item
+        spec_data_cur['path'] = spec_data_cur['path'] % path_data_item
+        
+        spec_data_list.append(spec_data_cur)
+    
+    # Else, report it to the user
+    #TODO(g): Cleaner error messages.  Exceptions are not user friendly.
     else:
-      log('ERROR: No path for final output, and option --stdout was not used.')
+      raise Exception('Using "path filter" spec command without putting any Python string formatting into the path value: "%(example_format)s": %s' % spec_data['path'])
   
-  return output
+  # Else, we only have 1 spec path and data to process
+  else:
+    spec_data_list = [spec_data]
+  
+  # Total output of all files templated
+  total_output = ''
+  
+  # Process all our spec paths/data
+  for spec_data in spec_data_list:
+    # Template All The Things: Master loop for Template Manager
+    output = TemplateFromSpec(spec_path, spec_data, datasources, options)
+    total_output += output
+  
+    # Save the master path
+    if (spec_data.get('path', None)):
+      # If we havent been told to write an output file, write it
+      if not options['no_output_file']:
+        open(spec_data['path'], 'w').write(output)
+        
+        log('Output Successful: %s' % spec_data['path'])
+    
+    # Else
+    else:
+      if options['stdout']:
+        print output
+      else:
+        log('ERROR: No path for final output, and option --stdout was not used.')
+  
+  return total_output
 
 
 def ProcessSpecPath(spec_path, options):

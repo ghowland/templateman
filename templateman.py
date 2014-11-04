@@ -258,16 +258,16 @@ def ProcessSpec(spec_path, spec_data, options):
   except Exception, e:
     Usage('Data Sources is not a YAML file or has a formatting error: %s: %s' % (datasources, e), options=options)
   
-  # If we are using path filters, we will process many spec paths and data
-  if 'path filter' in spec_data:
+  # If we are using outer filters, we will process many spec paths and data
+  if 'outer filter' in spec_data:
     spec_data_list = []
     
     # If we found python string formatting in the spec_path, we know this will work
     if '%(' in spec_data['path'] and ')s' in spec_data['path']:
       # Get the data needed for each of the paths to be filtered themselves
-      path_data = query.Query(datasources[spec_data['datasource']], spec_data, 'path filter')
+      path_data = query.Query(datasources[spec_data['datasource']], spec_data, 'outer filter')
       if not path_data:
-        raise Exception('"path filter" filter did not produce any results: %s' % spec_data['path filter'])
+        raise Exception('"outer filter" filter did not produce any results: %s' % spec_data['outer filter'])
       
       # Process the path data: we will be formatting both the path and the filter
       for path_data_item in path_data:
@@ -282,11 +282,15 @@ def ProcessSpec(spec_path, spec_data, options):
     # Else, report it to the user
     #TODO(g): Cleaner error messages.  Exceptions are not user friendly.
     else:
-      raise Exception('Using "path filter" spec command without putting any Python string formatting into the path value: "%(example_format)s": %s' % spec_data['path'])
+      raise Exception('Using "outer filter" spec command without putting any Python string formatting into the path value: "%(example_format)s": %s' % spec_data['path'])
   
   # Else, we only have 1 spec path and data to process
   else:
     spec_data_list = [spec_data]
+  
+  
+  if options['verbose']:
+    log('Spec Data List: %s' % spec_data_list)
   
   # Total output of all files templated
   total_output = ''
@@ -442,6 +446,10 @@ def Main(args=None):
   # Process the options and return 
   command_options = ProcessOptions(options)
   
+  
+  # Set module command options, so we dont have to always pass them in
+  query.OPTIONS = command_options
+
 
   # Ensure we at least have a command, it's required
   if len(args) < 1:

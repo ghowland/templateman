@@ -10,6 +10,10 @@ Hard coded pluggables.
 from log import log
 
 
+# If run from a command line, this will be set, and we will known whether ['verbose'] == True, etc
+OPTIONS = None
+
+
 class UnknownDatasourceType(Exception):
   """When we dont have a handler for this type of data source."""
 
@@ -22,7 +26,13 @@ def Query(datasource, spec_data, query_key='filter'):
     
     sql = spec_data[query_key]
     
+    if OPTIONS and OPTIONS.get('verbose', False):
+      log('Query: MySQL: SQL: %s' % sql)
+    
     result = mysql_datasource.Query(datasource, sql)
+    
+    if OPTIONS and OPTIONS.get('verbose', False):
+      log('Query: MySQL: Result: %s' % result)
 
   # YAML data file
   elif datasource['type'] == 'yaml':

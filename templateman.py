@@ -30,6 +30,10 @@ from util import query
 from util.regex import SanitizeRegex
 
 
+# If a directory for a target path is not found, create it and set it's mode to this
+DIRECTORY_MODE = 0755
+
+
 class ConfigurationError(Exception):
   """Failure of syntax or completeness of a spec files configuration."""
 
@@ -300,9 +304,14 @@ def ProcessSpec(spec_path, spec_data, options):
     # Template All The Things: Master loop for Template Manager
     output = TemplateFromSpec(spec_path, spec_data, datasources, options)
     total_output += output
-  
+    
     # Save the master path
     if (spec_data.get('path', None)):
+      # Ensure the path directory exists
+      dir_path = os.path.dirname(spec_data['path'])
+      if not os.path.isdir(dir_path):
+        os.makedirs(dir_path, mode=DIRECTORY_MODE)
+      
       # If we havent been told to write an output file, write it
       if not options['no_output_file']:
         open(spec_data['path'], 'w').write(output)
